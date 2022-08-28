@@ -1,14 +1,14 @@
-const htmlRoutes = require("express").Router();
 const apiRoutes = require("./apiRoutes");
-const uuid = require("../helpers/uuid");
+
+const htmlRoutes = require("express").Router();
+// const apiRoutes = require("./apiRoutes");
 
 htmlRoutes.get("/", (req, res) =>
   res.sendFile(path.join(__dirname, "/public/index.html"))
 );
 
-htmlRoutes.get("/notes", (req, res) =>
-  //error here
-  res.sendFile(path.join(__dirname, "/public/notes.html"))
+apiRoutes.get("/", (req, res) =>
+  res.sendFile(path.join(__dirname, "/public/index.html"))
 );
 
 module.exports = htmlRoutes;
