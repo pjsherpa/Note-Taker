@@ -6,13 +6,13 @@ const uuid = require("../helpers/uuid");
 const readFromFile = util.promisify(fs.readFileSync);
 const writeFromFile = util.promisify(fs.writeFileSync);
 
-apiRoutes.post("/notes", (req, res) =>
-  res.sendFile(path.join(__dirname, "/public/notes.html"))
-);
+// apiRoutes.post("/notes", (req, res) =>
+//   res.sendFile(path.join(__dirname, "/public/notes.html"))
+// );
 
 apiRoutes.get("/notes", (req, res) => res.sendFile(path.join("/db/db.json")));
 
-apiRoutes.post("/notes", (req, res) => {
+apiRoutes.post("/api/notes", (req, res) => {
   const notes = JSON.parse(readFromFile("/db/db.json"));
   const newNotes = req.body;
   newNotes.id = uuid();
