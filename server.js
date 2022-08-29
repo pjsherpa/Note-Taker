@@ -12,7 +12,7 @@ app.use(express.json());
 app.use(express.static("public"));
 
 app.use("/", htmlRouter);
-app.use("/notes", apiRouter);
+app.use("/api", apiRouter);
 
 //Returns the path of the app
 app.get("/notes", (req, res) =>
