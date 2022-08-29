@@ -5,16 +5,16 @@ const uuid = require("../helpers/uuid");
 const path = require("path");
 const db = require("../db/db.json");
 
-apiRoutes.get("/api/notes", (req, res) =>
+apiRoutes.get("/notes", (req, res) =>
   res.sendFile(path.join(__dirname, "/public/notes.html"))
 );
 
 // GET request for notes
-apiRoutes.get("/api/notes", (req, res) => {
+apiRoutes.get("/notes", (req, res) => {
   res.json(`${req.method} request received to get note`);
 });
 
-apiRoutes.post("/api/notes", (req, res) => {
+apiRoutes.post("/notes", (req, res) => {
   res.json(`${req.method} request received to add a note`);
   const { title, text } = req.body;
 
