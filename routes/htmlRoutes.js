@@ -1,5 +1,3 @@
-const apiRoutes = require("./apiRoutes");
-
 const htmlRoutes = require("express").Router();
 
 htmlRoutes.get("/", (req, res) =>
