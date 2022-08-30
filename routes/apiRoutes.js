@@ -43,7 +43,7 @@ noteRoutes.delete("/notes/:note_id", (req, res) => {
   readFromFile("./db/db.json")
     .then((data) => JSON.parse(data))
     .then((json) => {
-      const result = json.splice((json) => json.note_id !== noteId);
+      const result = json.filter((json) => json.note_id !== noteId);
 
       // Save that array to the filesystem
       writeToFile("./db/db.json", result);
