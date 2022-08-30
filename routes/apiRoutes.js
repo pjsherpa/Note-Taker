@@ -7,25 +7,10 @@ const {
   readAndAppend,
   writeToFile,
 } = require("../helper/fsCodes");
-const noteList = [];
 
 // GET Route for notes
 noteRoutes.get("/notes", (req, res) => {
   readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
-});
-
-// GET Route for a specific note
-noteRoutes.get("/notes/:note_id", (req, res) => {
-  //using the params to create unique id
-  const noteId = req.params.note_id;
-  readFromFile("./db/db.json")
-    .then((data) => JSON.parse(data))
-    .then((json) => {
-      const result = json.filter((note) => note.note_id === noteId);
-      return result.length > 0
-        ? res.json(result)
-        : res.json("No note with that ID");
-    });
 });
 
 noteRoutes.post("/notes", (req, res) => {
@@ -58,7 +43,7 @@ noteRoutes.delete("/notes/:note_id", (req, res) => {
   readFromFile("./db/db.json")
     .then((data) => JSON.parse(data))
     .then((json) => {
-      const result = json.filter((note) => note.note_id !== noteId);
+      const result = json.splice((json) => json.note_id !== noteId);
 
       // Save that array to the filesystem
       writeToFile("./db/db.json", result);
