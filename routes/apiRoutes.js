@@ -1,12 +1,7 @@
 const express = require("express");
 const noteRoutes = express();
-const path = require("path");
 const { v4: uuidv4 } = require("uuid");
-const {
-  readFromFile,
-  readAndAppend,
-  writeToFile,
-} = require("../helper/fsCodes");
+const { readFromFile, writeToFile } = require("../helper/fsCodes");
 
 // GET Route for notes
 noteRoutes.get("/notes", (req, res) => {
