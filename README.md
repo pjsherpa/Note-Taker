@@ -30,7 +30,7 @@ npm i express
 ### Deployment:
 
 Github:
-(https://github.com/pjsherpa/readmeGenerator)
+(https://github.com/pjsherpa/Note-Taker)
 
 Heroku:
 (https://cryptic-island-27891.herokuapp.com/)
