@@ -1,7 +1,9 @@
-const htmlRoutes = require("express").Router();
+const app = require("express").Router();
+const path = require("path");
+const index = require("../");
 
-htmlRoutes.get("/", (req, res) =>
-  res.sendFile(path.join(__dirname, "/public/index.html"))
+// Getting the path request and sending to file for response.
+app.get("/notes", (req, res) =>
+  res.sendFile(path.join(__dirname, "../public/notes.html"))
 );
-
-module.exports = htmlRoutes;
+module.exports = app;

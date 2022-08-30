@@ -1,75 +1,70 @@
 const express = require("express");
-const apiRoutes = express.Router();
-const fs = require("fs");
-const uuid = require("../helpers/uuid");
+const noteRoutes = express();
 const path = require("path");
-const db = require("../db/db.json");
+const { v4: uuidv4 } = require("uuid");
+const {
+  readFromFile,
+  readAndAppend,
+  writeToFile,
+} = require("../helper/fsCodes");
 const noteList = [];
 
-apiRoutes.get("/api/notes", (req, res) =>
-  res.sendFile(path.join(__dirname, "/public/notes.html"))
-);
-
-// GET request for notes
-apiRoutes.get("/notes", (req, res) => {
-  res.json(`${req.method} request received to get note`);
-});
-
 // GET Route for notes
-apiRoutes.get("/notes", (req, res) => {
+noteRoutes.get("/notes", (req, res) => {
   readFromFile("./db/db.json").then((data) => res.json(JSON.parse(data)));
 });
 
-apiRoutes.post("/notes", (req, res) => {
-  res.json(`${req.method} request received to add a note`);
-  const { title, text } = req.body;
-
-  if (title && text) {
-    // Variable for the object we will save
-    const newNote = {
-      title,
-      text,
-      note_id: uuid(),
-    };
-    // Convert the data to a string so we can save it
-    const noteString = JSON.stringify(newNote);
-    // Wrote the string to a file
-    fs.writeFile(`./db/db.json`, noteString, (err) =>
-      err
-        ? console.error(err)
-        : console.log(
-            `Notes for ${newNote.title} has been written to JSON file`
-          )
-    );
-    noteList.push(newNote);
-    const response = {
-      status: "success",
-      body: noteList,
-    };
-    console.log(response);
-  } else {
-    res.status(500).json("Error in posting notes");
-  }
+// GET Route for a specific note
+noteRoutes.get("/notes/:note_id", (req, res) => {
+  //using the params to create unique id
+  const noteId = req.params.note_id;
+  readFromFile("./db/db.json")
+    .then((data) => JSON.parse(data))
+    .then((json) => {
+      const result = json.filter((note) => note.note_id === noteId);
+      return result.length > 0
+        ? res.json(result)
+        : res.json("No note with that ID");
+    });
 });
 
-// POST Route for a new UX/UI note
-apiRoutes.post("/notes", (req, res) => {
+noteRoutes.post("/notes", (req, res) => {
+  console.log(req.body);
+
   const { title, text } = req.body;
 
   if (req.body) {
     const newNote = {
       title,
       text,
-      note_id: uuid(),
+      note_id: uuidv4(),
     };
+    readFromFile("./db/db.json")
+      .then((data) => JSON.parse(data))
+      .then((results) => {
+        results.push(newNote);
 
-    fs.readFile(newTip, "./db/db.json");
-    const parsedData = JSON.parse(newTip);
-    parsedData.push(noteString);
-    res.json(`notes added successfully 🚀`);
+        writeToFile("./db/db.json", results);
+        res.json(`note added successfully 🚀`);
+      });
   } else {
-    res.error("Error in adding notes");
+    res.error("Error in adding note");
   }
 });
 
-module.exports = apiRoutes;
+// DELETE using route for specific note
+noteRoutes.delete("/notes/:note_id", (req, res) => {
+  const noteId = req.params.note_id;
+  readFromFile("./db/db.json")
+    .then((data) => JSON.parse(data))
+    .then((json) => {
+      const result = json.filter((note) => note.note_id !== noteId);
+
+      // Save that array to the filesystem
+      writeToFile("./db/db.json", result);
+
+      // Respond to the DELETE request
+      res.json(`Item ${noteId} has been deleted 🗑️`);
+    });
+});
+module.exports = noteRoutes;
